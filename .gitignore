@@ -6,4 +6,3 @@ uploads/*
 .vscode/
 static/graph.png
 static/propagation_graph*.png
-```
