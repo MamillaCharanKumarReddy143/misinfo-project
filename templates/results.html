@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - Misinformation Detector</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <a href="/" class="navbar-brand text-wrap" style="max-width: 70%;">
+                <i class="fas fa-arrow-left me-2"></i> Detecting Misinformation Spread in Social Media using GCNN and Propagation Models
+            </a>
+            <span class="navbar-brand h5 mb-0">Analysis Results</span>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="mb-4">
+            <h4 class="text-muted"><i class="fas fa-file-csv me-2"></i>Dataset: <span class="text-dark fw-bold">{{ results.dataset_name }}</span></h4>
+        </div>
+        <div class="row g-4 mb-4">
+            <div class="col-md-2">
+                <div class="card stat-card text-center p-3 border-0 shadow-sm h-100">
+                    <h6 class="text-muted small">Total Nodes</h6>
+                    <h3 class="fw-bold text-primary">{{ results.num_nodes }}</h3>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card stat-card text-center p-3 border-0 shadow-sm h-100">
+                    <h6 class="text-muted small">Total Edges</h6>
+                    <h3 class="fw-bold text-info">{{ results.num_edges }}</h3>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card stat-card text-center p-3 border-0 shadow-sm h-100">
+                    <h6 class="text-muted small">Avg Degree</h6>
+                    <h3 class="fw-bold text-secondary">{{ results.avg_degree }}</h3>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card stat-card text-center p-3 border-0 shadow-sm h-100">
+                    <h6 class="text-muted small">Density</h6>
+                    <h3 class="fw-bold text-warning">{{ results.density }}</h3>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card stat-card text-center p-3 border-0 shadow-sm h-100">
+                    <h6 class="text-muted small">Clustering</h6>
+                    <h3 class="fw-bold text-success">{{ results.clustering }}</h3>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card stat-card text-center p-3 border-0 shadow-sm h-100">
+                    <h6 class="text-muted small">Status</h6>
+                    {% if results.is_misinfo_spread %}
+                        <span class="badge bg-danger p-2"><i class="fas fa-exclamation-triangle"></i> Detected</span>
+                    {% else %}
+                        <span class="badge bg-success p-2"><i class="fas fa-check-circle"></i> Low</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Propagation Graph -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold">Interactive Propagation Network</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="propagationGraph" style="height: 600px;"></div>
+                    </div>
+                    <div class="card-footer bg-white text-muted small">
+                        <span class="badge" style="background: #2ecc71;">&nbsp;</span> Real Node
+                        <span class="badge ms-2" style="background: #e74c3c;">&nbsp;</span> Misinformation Node
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suspicious Spreaders -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold">Top Suspicious Spreaders</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Node ID</th>
+                                        <th>Degree</th>
+                                        <th>Degree Centrality</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for node in results.suspicious_nodes %}
+                                    <tr>
+                                        <td><code>{{ node.id }}</code></td>
+                                        <td>{{ node.degree }}</td>
+                                        <td>{{ node.centrality }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Centrality Analysis Chart -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold">Centrality Analysis</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="centralityChart" style="height: 300px;"></div>
+                    </div>
+                </div>
+
+                <!-- GCNN Insights -->
+                <div class="card border-0 shadow-sm bg-primary text-white">
+                    <div class="card-body">
+                        <h5 class="fw-bold"><i class="fas fa-brain me-2"></i> GCNN Insights</h5>
+                        <p class="small mb-0">
+                            The Graph Convolutional Neural Network analyzed the structural properties (degree, betweenness) of each node to predict the likelihood of misinformation propagation.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Helper to safely render Plotly graphs
+        function renderGraph(divId, graphJson) {
+            if (typeof Plotly === 'undefined') {
+                console.error('Plotly library not loaded! Check internet connection.');
+                document.getElementById(divId).innerHTML = '<div class="alert alert-danger">Error: Plotly library failed to load.</div>';
+                return;
+            }
+            try {
+                // If graphJson is a string, Plotly can handle it directly or we parse it
+                const graphData = typeof graphJson === 'string' ? JSON.parse(graphJson) : graphJson;
+                Plotly.newPlot(divId, graphData.data, graphData.layout, {responsive: true});
+            } catch (err) {
+                console.error('Error rendering graph ' + divId + ':', err);
+                document.getElementById(divId).innerHTML = '<div class="alert alert-warning">Error: Failed to visualize data.</div>';
+            }
+        }
+
+        // Render Propagation Graph
+        renderGraph('propagationGraph', {{ results.graph_json | safe }});
+
+        // Render Centrality Chart
+        renderGraph('centralityChart', {{ results.centrality_json | safe }});
+    </script>
+</body>
+</html>

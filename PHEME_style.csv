@@ -1,0 +1,6 @@
+user_id,post_id,parent_post,label
+user1,r1,,1
+user2,r2,r1,1
+user3,r3,r1,0
+user4,r4,r2,1
+

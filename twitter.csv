@@ -1,0 +1,5 @@
+user_id,post_id,parent_post,label
+u101,tweet1,,1
+u102,tweet2,tweet1,1
+u103,tweet3,tweet2,1
+u104,tweet4,,0

@@ -1,0 +1,4 @@
+source,target,weight,type,timestamp
+user_1,user_2,0.9,share,2024-01-15
+user_2,user_3,0.7,retweet,2024-01-15
+user_1,user_3,0.85,mention,2024-01-16

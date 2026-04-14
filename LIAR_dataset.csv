@@ -1,0 +1,5 @@
+user_id,post_id,parent_post,label
+speaker1,s1,,1
+speaker2,s2,,0
+speaker3,s3,s1,1
+speaker4,s4,s3,1

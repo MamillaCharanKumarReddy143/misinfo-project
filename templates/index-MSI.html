@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detecting Misinformation Spread</title>
+</head>
+<body>
+
+<h1>Detecting Misinformation Spread in Social Media</h1>
+
+<p>
+This system analyzes social media data using
+<b>Graph Theory, Social Network Analysis, and Propagation Modeling</b>.
+</p>
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".csv" required>
+    <br><br>
+    <button type="submit">Analyze Data</button>
+</form>
+
+<!-- ✅ ADDED: Show selected file name after analysis -->
+{% if filename %}
+<p><b>Selected File:</b> {{ filename }}</p>
+{% endif %}
+
+{% if error %}
+    <p style="color:red">{{ error }}</p>
+{% endif %}
+
+{% if result %}
+<hr>
+<h2>Dataset Analysis</h2>
+
+<p>Total Posts: {{ analysis.total_posts }}</p>
+<p>Fake Posts: {{ analysis.fake_posts }}</p>
+<p>Real Posts: {{ analysis.real_posts }}</p>
+<p>Fake Percentage: {{ analysis.fake_percentage }}%</p>
+
+<hr>
+<h2>Social Network Analysis (SNA)</h2>
+
+<h3>Top Influential Nodes (Degree Centrality)</h3>
+<ul>
+    {% for node, value in analysis.top_degree.items() %}
+        <li>{{ node }} : {{ value }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Top Influential Nodes (Betweenness Centrality)</h3>
+<ul>
+    {% for node, value in analysis.top_betweenness.items() %}
+        <li>{{ node }} : {{ value }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Suspicious Spreaders (Auto Detected)</h3>
+<p>Total Suspicious Nodes: {{ analysis.suspicious_count }}</p>
+<ul>
+    {% for node in analysis.suspicious_spreaders %}
+        <li>{{ node }}</li>
+    {% endfor %}
+</ul>
+
+<hr>
+<h2>Propagation Graph</h2>
+
+<img src="{{ url_for('static', filename='propagation_graph.png') }}?v={{ timestamp }}"
+     width="700"
+     alt="Propagation Graph">
+
+{% endif %}
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+uploads/*
+!uploads/.gitkeep
+.env
+.vscode/
+static/graph.png
+static/propagation_graph*.png
+```

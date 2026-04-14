@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Misinformation Detector - Social Media Propagation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1 text-wrap">
+                Detecting Misinformation Spread in Social Media using GCNN and Propagation Models
+            </span>
+        </div>
+    </nav>
+
+    <div class="hero-section text-center py-5">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Social Media Analysis Dashboard</h1>
+            <p class="lead">Analyze social network propagation patterns to detect misinformation using Graph Convolutional Neural Networks.</p>
+            
+            <div class="mt-5 upload-container mx-auto" style="max-width: 600px;">
+                <div class="card shadow-lg border-0 p-4">
+                    <form action="/analyze" method="POST" enctype="multipart/form-data" id="uploadForm">
+                        <div class="mb-4">
+                            <label for="file" class="form-label h5 mb-3">Upload Dataset</label>
+                            <div class="input-group">
+                                <input type="file" name="file" class="form-control d-none" id="file" accept=".csv" required onchange="updateFileName()">
+                                <button type="button" class="btn btn-outline-secondary w-100 mb-2 py-3" onclick="document.getElementById('file').click()">
+                                    <i class="fas fa-cloud-upload-alt me-2"></i> Choose CSV File
+                                </button>
+                                <div id="fileNameDisplay" class="text-muted small w-100 text-center mb-3">No file chosen</div>
+                            </div>
+                            <div class="form-text mt-2 text-muted">Please upload a CSV file containing social media interactions.</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100" id="analyzeBtn">
+                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            <i class="fas fa-chart-pie me-2"></i> Analyze
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <div class="row text-center g-4">
+            <div class="col-md-4">
+                <div class="feature-card p-4 h-100">
+                    <i class="fas fa-project-diagram fa-3x mb-3 text-primary"></i>
+                    <h3>Graph Construction</h3>
+                    <p>Builds complex social networks from interactions, mapping nodes (users/posts) and edges (retweets/replies).</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card p-4 h-100">
+                    <i class="fas fa-brain fa-3x mb-3 text-success"></i>
+                    <h3>GCNN Analysis</h3>
+                    <p>Utilizes Graph Convolutional Neural Networks to classify nodes and detect suspicious propagation clusters.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card p-4 h-100">
+                    <i class="fas fa-chart-line fa-3x mb-3 text-info"></i>
+                    <h3>Interactive Visuals</h3>
+                    <p>Explore results through interactive network graphs and centrality metrics for deep insights.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-4 mt-auto">
+        <p>&copy; 2026 Misinformation Spread Detection Project</p>
+    </footer>
+
+    <script>
+        function updateFileName() {
+            const input = document.getElementById('file');
+            const display = document.getElementById('fileNameDisplay');
+            if (input && input.files && input.files.length > 0) {
+                display.innerText = "Selected: " + input.files[0].name;
+                display.classList.remove('text-muted');
+                display.classList.add('text-primary', 'fw-bold');
+            }
+        }
+
+        const uploadForm = document.getElementById('uploadForm');
+        if (uploadForm) {
+            uploadForm.onsubmit = function() {
+                const btn = document.getElementById('analyzeBtn');
+                if (btn) {
+                    btn.disabled = true;
+                    const spinner = btn.querySelector('.spinner-border');
+                    const icon = btn.querySelector('i');
+                    if (spinner) spinner.classList.remove('d-none');
+                    if (icon) icon.classList.add('d-none');
+                    btn.innerHTML = btn.innerHTML.replace('Analyze', 'Processing...');
+                }
+            };
+        }
+    </script>
+</body>
+</html>
